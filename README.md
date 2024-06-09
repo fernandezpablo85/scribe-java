@@ -30,3 +30,10 @@ Function 1: scribejava-httpclient-armeria/src/main/java/com/github/scribejava/ht
 
 Function 2: scribejava-httpclient-armeria/src/main/java/com/github/scribejava/httpclient/armeria/ArmeriaWebClientBuilder.java (newWebClient)
 
+
+
+Nikola Bakalinov
+Function 1: scribejava/scribejava-httpclient-ning/src/main/java/com/github/scribejava/httpclient/ning
+/NingHttpClient.java  (doExecuteAsync)
+
+
