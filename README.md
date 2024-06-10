@@ -40,7 +40,13 @@ Function 1: scribejava/scribejava-httpclient-ning/src/main/java/com/github/scrib
 /NingHttpClient.java  (doExecuteAsync)
 ![image](https://github.com/YBushi/SEP-Assingment1/assets/113595455/af7aefc7-8db2-422b-8420-7760e43b8191)
 
-![image](https://github.com/YBushi/SEP-Assingment1/assets/113595455/a6e8a221-e663-4eea-bd1b-6951f74454d0)
+![image](https://github.com/YBushi/SEP-Assingment1/assets/113595455/f45a7c09-47b2-4142-9d92-223d0b758001)
+
+![image](https://github.com/YBushi/SEP-Assingment1/assets/113595455/cda0b2e0-cef0-499d-a484-cdcdab1d1985)
+
+
+
+
 
 
 
