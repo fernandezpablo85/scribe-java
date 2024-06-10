@@ -38,5 +38,9 @@ Function 2: scribejava-httpclient-armeria/src/main/java/com/github/scribejava/ht
 Nikola Bakalinov
 Function 1: scribejava/scribejava-httpclient-ning/src/main/java/com/github/scribejava/httpclient/ning
 /NingHttpClient.java  (doExecuteAsync)
+![image](https://github.com/YBushi/SEP-Assingment1/assets/113595455/26649e11-0fd3-40c6-af43-37aa0dab19fc)
+
+
+
 
 
