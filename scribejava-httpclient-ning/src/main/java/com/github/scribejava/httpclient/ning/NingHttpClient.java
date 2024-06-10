@@ -8,15 +8,37 @@ import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Verb;
 import com.ning.http.client.AsyncHttpClient;
 
+
 import java.util.Map;
 import java.util.concurrent.Future;
 
 import com.ning.http.client.AsyncHttpClientConfig;
 import java.io.File;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class NingHttpClient extends AbstractAsyncOnlyHttpClient {
 
     private final AsyncHttpClient client;
+    private static final ConcurrentHashMap<String, AtomicBoolean> branchCoverage = new ConcurrentHashMap<>();
+    // data structure for info about the branches 
+    static {
+        branchCoverage.put("branch_1", new AtomicBoolean(false)); // GET
+        branchCoverage.put("branch_2", new AtomicBoolean(false)); // POST
+        branchCoverage.put("branch_3", new AtomicBoolean(false)); // PUT
+        branchCoverage.put("branch_4", new AtomicBoolean(false)); // DELETE
+        branchCoverage.put("branch_5", new AtomicBoolean(false)); // DEFAULT
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Branch coverage results:");
+                for (Map.Entry<String, AtomicBoolean> entry : branchCoverage.entrySet()) {
+                    System.out.println(entry.getKey() + ": " + (entry.getValue().get() ? "Taken" : "Not taken"));
+                }
+            }
+        }));
+    }
 
     public NingHttpClient() {
         this(NingHttpClientConfig.defaultConfig());
@@ -79,44 +101,58 @@ public class NingHttpClient extends AbstractAsyncOnlyHttpClient {
                 converter);
     }
 
+    // branch coverage: Nikola
     private <T> Future<T> doExecuteAsync(String userAgent, Map<String, String> headers, Verb httpVerb,
-            String completeUrl, BodySetter bodySetter, Object bodyContents, OAuthAsyncRequestCallback<T> callback,
-            OAuthRequest.ResponseConverter<T> converter) {
-        final AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;
-        switch (httpVerb) {
-            case GET:
-                boundRequestBuilder = client.prepareGet(completeUrl);
-                break;
-            case POST:
-                boundRequestBuilder = client.preparePost(completeUrl);
-                break;
-            case PUT:
-                boundRequestBuilder = client.preparePut(completeUrl);
-                break;
-            case DELETE:
-                boundRequestBuilder = client.prepareDelete(completeUrl);
-                break;
-            default:
-                throw new IllegalArgumentException("message build error: unknown verb type");
-        }
-
-        if (httpVerb.isPermitBody()) {
-            if (!headers.containsKey(CONTENT_TYPE)) {
-                boundRequestBuilder.addHeader(CONTENT_TYPE, DEFAULT_CONTENT_TYPE);
-            }
-            bodySetter.setBody(boundRequestBuilder, bodyContents);
-        }
-
-        for (Map.Entry<String, String> header : headers.entrySet()) {
-            boundRequestBuilder.addHeader(header.getKey(), header.getValue());
-        }
-
-        if (userAgent != null) {
-            boundRequestBuilder.setHeader(OAuthConstants.USER_AGENT_HEADER_NAME, userAgent);
-        }
-
-        return boundRequestBuilder.execute(new OAuthAsyncCompletionHandler<>(callback, converter));
+        String completeUrl, BodySetter bodySetter, Object bodyContents, OAuthAsyncRequestCallback<T> callback,
+        OAuthRequest.ResponseConverter<T> converter) {
+    final AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;
+    switch (httpVerb) {
+        // ID: branch_1
+        case GET:
+            branchCoverage.get("branch_1").set(true); // Update branch coverage for GET
+            boundRequestBuilder = client.prepareGet(completeUrl);
+            break;
+        // ID: branch_2
+        case POST:
+            branchCoverage.get("branch_2").set(true); // Update branch coverage for POST
+            boundRequestBuilder = client.preparePost(completeUrl);
+            break;
+        // ID: branch_3
+        case PUT:
+            branchCoverage.get("branch_3").set(true); // Update branch coverage for PUT
+            boundRequestBuilder = client.preparePut(completeUrl);
+            break;
+        // ID: branch_4    
+        case DELETE:
+            branchCoverage.get("branch_4").set(true); // Update branch coverage for DELETE
+            boundRequestBuilder = client.prepareDelete(completeUrl);
+            break;
+        // ID: branch_5
+        default:
+            branchCoverage.get("branch_5").set(true); // Update branch coverage for DEFAULT case
+            throw new IllegalArgumentException("message build error: unknown verb type");
     }
+
+    if (httpVerb.isPermitBody()) {
+        // Check if the Content-Type header is already present
+        if (!headers.containsKey("Content-Type")) {
+            // Set the Content-Type header if not present
+            boundRequestBuilder.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        }
+        bodySetter.setBody(boundRequestBuilder, bodyContents);
+    }
+
+    for (Map.Entry<String, String> header : headers.entrySet()) {
+        boundRequestBuilder.addHeader(header.getKey(), header.getValue());
+    }
+
+    if (userAgent != null) {
+        boundRequestBuilder.setHeader(OAuthConstants.USER_AGENT_HEADER_NAME, userAgent);
+    }
+
+    return boundRequestBuilder.execute(new OAuthAsyncCompletionHandler<>(callback, converter));
+}
+
 
     private enum BodySetter {
         BYTE_ARRAY {
