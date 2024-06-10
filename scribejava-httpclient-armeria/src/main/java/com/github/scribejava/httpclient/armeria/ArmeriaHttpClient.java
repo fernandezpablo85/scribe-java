@@ -202,6 +202,8 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
         return requireNonNull(uri.getScheme(), "scheme") + "://" + requireNonNull(uri.getAuthority(), "authority");
     }
 
+    private static boolean[] getServiceCaseCoverage = new boolean[2];
+
     /**
      * Extracts {@code path}, {@code query} and {@code fragment} portion of the
      * {@link URI}.
@@ -214,10 +216,12 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
                 .append(requireNonNull(uri.getPath(), "path"));
         final String query = uri.getQuery();
         if (query != null) {
+            getServiceCaseCoverage[0] = true; // branch 0
             builder.append('?').append(query);
         }
         final String fragment = uri.getFragment();
         if (fragment != null) {
+            getServiceCaseCoverage[1] = true; // branch 1
             builder.append('#').append(fragment);
         }
         return builder.toString();
@@ -230,13 +234,18 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
      * @return {@link HttpMethod} corresponding to the parameter
      */
 
-    private static boolean[] caseCoverage = new boolean[8];
+    private static boolean[] getHttpCaseCoverage = new boolean[8];
     private static final String[] methods = { "GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "TRACE", "PATCH" };
 
     private static void printCoverage() {
-        System.out.println("Coverage report:");
-        for (int i = 0; i < caseCoverage.length; i++) {
-            System.out.println("Branch " + i + ": " + methods[i] + " case executed: " + caseCoverage[i]);
+        System.out.println("GetHttpMethod Coverage report:");
+        for (int i = 0; i < getHttpCaseCoverage.length; i++) {
+            System.out.println("Branch " + i + ": " + methods[i] + " case executed: " + getHttpCaseCoverage[i]);
+        }
+
+        System.out.println("GetService Coverage report:");
+        for (int i = 0; i < getServiceCaseCoverage.length; i++) {
+            System.out.println("Branch " + i + ": " + getServiceCaseCoverage[i]);
         }
     }
 
@@ -248,28 +257,28 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
     private static HttpMethod getHttpMethod(Verb httpVerb) {
         switch (httpVerb) {
             case GET:
-                caseCoverage[0] = true;
+                getHttpCaseCoverage[0] = true;
                 return HttpMethod.GET;
             case POST:
-                caseCoverage[1] = true;
+                getHttpCaseCoverage[1] = true;
                 return HttpMethod.POST;
             case PUT:
-                caseCoverage[2] = true;
+                getHttpCaseCoverage[2] = true;
                 return HttpMethod.PUT;
             case DELETE:
-                caseCoverage[3] = true;
+                getHttpCaseCoverage[3] = true;
                 return HttpMethod.DELETE;
             case HEAD:
-                caseCoverage[4] = true;
+                getHttpCaseCoverage[4] = true;
                 return HttpMethod.HEAD;
             case OPTIONS:
-                caseCoverage[5] = true;
+                getHttpCaseCoverage[5] = true;
                 return HttpMethod.OPTIONS;
             case TRACE:
-                caseCoverage[6] = true;
+                getHttpCaseCoverage[6] = true;
                 return HttpMethod.TRACE;
             case PATCH:
-                caseCoverage[7] = true;
+                getHttpCaseCoverage[7] = true;
                 return HttpMethod.PATCH;
             default:
                 throw new IllegalArgumentException(
