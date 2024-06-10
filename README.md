@@ -51,8 +51,10 @@ Function 1: scribejava/scribejava-httpclient-ning/src/main/java/com/github/scrib
 
 ![image](https://github.com/YBushi/SEP-Assingment1/assets/113595455/4a1a351c-74b5-4c46-b95c-2eb499a9e776)
 
-Function 2: scribejava/scribejava-httpclient-ning/src/main/java/com/github/scribejava/httpclient/ning
-/NingHttpClient.java  (doExecuteAsync)
+Function 2: SEP-Assingment1/scribejava-httpclient-armeria/src/main/java/com/github/scribejava/httpclient/armeria
+/ArmeriaHttpClient.java  (doExecuteAsync)
+
+
 
 
 
