@@ -32,7 +32,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Supplier;
-
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * An implementation of {@link AbstractAsyncOnlyHttpClient} based on
  * <a href="https://line.github.io/armeria/">Armeria HTTP client</a>.
@@ -52,12 +53,33 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
      */
     private final ReentrantReadWriteLock httpClientsLock = new ReentrantReadWriteLock();
 
+
+
     public ArmeriaHttpClient() {
         this(ArmeriaHttpClientConfig.defaultConfig());
     }
 
     public ArmeriaHttpClient(ArmeriaHttpClientConfig config) {
         clientBuilder = config.createClientBuilder();
+    }
+
+    // data structure for info about the branches  
+    private static final ConcurrentHashMap<String, AtomicBoolean> branchCoverage = new ConcurrentHashMap<>();
+
+     static {
+        branchCoverage.put("branch_1", new AtomicBoolean(false));
+        branchCoverage.put("branch_2", new AtomicBoolean(false));
+        branchCoverage.put("branch_3", new AtomicBoolean(false));
+        branchCoverage.put("branch_4", new AtomicBoolean(false));
+        branchCoverage.put("branch_5", new AtomicBoolean(false));
+        branchCoverage.put("branch_6", new AtomicBoolean(false));
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Branch coverage results:");
+            branchCoverage.forEach((branch, covered) -> {
+                System.out.println(branch + ": " + (covered.get() ? "Taken" : "Not taken"));
+            });
+        }));
     }
 
     /**
@@ -103,50 +125,57 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
                 converter);
     }
 
-    private <T> CompletableFuture<T> doExecuteAsync(String userAgent, Map<String, String> headers, Verb httpVerb,
-            String completeUrl, Supplier<HttpData> contentSupplier, OAuthAsyncRequestCallback<T> callback,
-            OAuthRequest.ResponseConverter<T> converter) {
-        // Get the URI and Path
-        final URI uri = URI.create(completeUrl);
-        final String path = getServicePath(uri);
+    // branch coverage: Nikola
+   private <T> CompletableFuture<T> doExecuteAsync(String userAgent, Map<String, String> headers, Verb httpVerb,
+        String completeUrl, Supplier<HttpData> contentSupplier, OAuthAsyncRequestCallback<T> callback,
+        OAuthRequest.ResponseConverter<T> converter) {
 
-        // Fetch/Create WebClient instance for a given Endpoint
-        final WebClient client = getClient(uri);
+    final URI uri = URI.create(completeUrl);
+    final String path = getServicePath(uri);
+    final WebClient client = getClient(uri);
+    final RequestHeadersBuilder headersBuilder = RequestHeaders.of(getHttpMethod(httpVerb), path).toBuilder();
 
-        // Build HTTP request
-        final RequestHeadersBuilder headersBuilder = RequestHeaders.of(getHttpMethod(httpVerb), path).toBuilder();
+    headersBuilder.add(headers.entrySet());
+    if (userAgent != null) {
+        headersBuilder.add(OAuthConstants.USER_AGENT_HEADER_NAME, userAgent);
+    }
 
-        headersBuilder.add(headers.entrySet());
-        if (userAgent != null) {
-            headersBuilder.add(OAuthConstants.USER_AGENT_HEADER_NAME, userAgent);
+    final HttpResponse response;
+    // ID: branch_1
+    if (httpVerb.isPermitBody()) {
+        branchCoverage.get("branch_1").set(true);
+        final HttpData contents = contentSupplier.get();
+        // ID: branch_2
+        if (httpVerb.isRequiresBody() && contents == null) {
+            branchCoverage.get("branch_2").set(true);
+            throw new IllegalArgumentException("Contents missing for request method " + httpVerb.name());
         }
-
-        // Build the request body and execute HTTP request
-        final HttpResponse response;
-        if (httpVerb.isPermitBody()) { // POST, PUT, PATCH and DELETE methods
-            final HttpData contents = contentSupplier.get();
-            if (httpVerb.isRequiresBody() && contents == null) { // POST or PUT methods
-                throw new IllegalArgumentException("Contents missing for request method " + httpVerb.name());
-            }
-
-            if (headersBuilder.contentType() == null) {
-                headersBuilder.contentType(MediaType.FORM_DATA);
-            }
-
-            if (contents != null) {
-                response = client.execute(headersBuilder.build(), contents);
-            } else {
-                response = client.execute(headersBuilder.build());
-            }
-        } else {
+        // ID: branch_3
+        if (headersBuilder.contentType() == null) {
+            branchCoverage.get("branch_3").set(true);
+            headersBuilder.contentType(MediaType.FORM_DATA);
+        }
+        // ID: branch_4
+        if (contents != null) {
+            branchCoverage.get("branch_4").set(true);
+            response = client.execute(headersBuilder.build(), contents);
+        } 
+        // ID: branch_5
+        else{
+            branchCoverage.get("branch_5").set(true);
             response = client.execute(headersBuilder.build());
         }
-
-        // Aggregate HTTP response (asynchronously) and return the result Future
-        return response.aggregate()
-                .thenApply(aggregatedResponse -> whenResponseComplete(callback, converter, aggregatedResponse))
-                .exceptionally(throwable -> completeExceptionally(callback, throwable));
+    } // ID: branch_6 
+    else {
+        branchCoverage.get("branch_6").set(true);
+        response = client.execute(headersBuilder.build());
     }
+
+    return response.aggregate()
+            .thenApply(aggregatedResponse -> whenResponseComplete(callback, converter, aggregatedResponse))
+            .exceptionally(throwable -> completeExceptionally(callback, throwable));
+}
+
 
     /**
      * Provides an instance of {@link WebClient} for a given endpoint {@link URI} based on an endpoint as
