@@ -202,7 +202,7 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
         return requireNonNull(uri.getScheme(), "scheme") + "://" + requireNonNull(uri.getAuthority(), "authority");
     }
 
-    private static boolean[] getServiceCaseCoverage = new boolean[2];
+    private static boolean[] getServiceCaseCoverage = new boolean[2]; //Datas structure
 
     /**
      * Extracts {@code path}, {@code query} and {@code fragment} portion of the
@@ -227,16 +227,6 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
         return builder.toString();
     }
 
-    /**
-     * Maps {@link Verb} to {@link HttpMethod}
-     *
-     * @param httpVerb a {@link Verb} to match with {@link HttpMethod}
-     * @return {@link HttpMethod} corresponding to the parameter
-     */
-
-    private static boolean[] getHttpCaseCoverage = new boolean[8];
-    private static final String[] methods = { "GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "TRACE", "PATCH" };
-
     private static void printCoverage() {
         System.out.println("GetHttpMethod Coverage report:");
         for (int i = 0; i < getHttpCaseCoverage.length; i++) {
@@ -254,6 +244,16 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
         Runtime.getRuntime().addShutdownHook(new Thread(ArmeriaHttpClient::printCoverage));
     }
 
+    /**
+     * Maps {@link Verb} to {@link HttpMethod}
+     *
+     * @param httpVerb a {@link Verb} to match with {@link HttpMethod}
+     * @return {@link HttpMethod} corresponding to the parameter
+     */
+
+    private static boolean[] getHttpCaseCoverage = new boolean[8];
+    private static final String[] methods = { "GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "TRACE", "PATCH" };
+    
     private static HttpMethod getHttpMethod(Verb httpVerb) {
         switch (httpVerb) {
             case GET:
