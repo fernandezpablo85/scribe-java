@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -44,7 +45,8 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
      */
     private final ArmeriaWebClientBuilder clientBuilder;
     /**
-     * A list of cached Endpoints. It helps avoiding building a new Endpoint per each request.
+     * A list of cached Endpoints. It helps avoiding building a new Endpoint per
+     * each request.
      */
     private final Map<String, WebClient> httpClients = new HashMap<>();
     /**
@@ -149,7 +151,8 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
     }
 
     /**
-     * Provides an instance of {@link WebClient} for a given endpoint {@link URI} based on an endpoint as
+     * Provides an instance of {@link WebClient} for a given endpoint {@link URI}
+     * based on an endpoint as
      * {@code scheme://authority}.
      *
      * @param uri an endpoint {@link URI}
@@ -192,16 +195,19 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
     /**
      * Extracts {@code scheme} and {@code authority} portion of the {@link URI}.
      *
-     * Assuming the {@link URI} as the following: {@code URI = scheme:[//authority]path[?query][#fragment]}
+     * Assuming the {@link URI} as the following:
+     * {@code URI = scheme:[//authority]path[?query][#fragment]}
      */
     private static String getEndPoint(URI uri) {
         return requireNonNull(uri.getScheme(), "scheme") + "://" + requireNonNull(uri.getAuthority(), "authority");
     }
 
     /**
-     * Extracts {@code path}, {@code query} and {@code fragment} portion of the {@link URI}.
+     * Extracts {@code path}, {@code query} and {@code fragment} portion of the
+     * {@link URI}.
      *
-     * Assuming the {@link URI} as the following: {@code URI = scheme:[//authority]path[?query][#fragment]}
+     * Assuming the {@link URI} as the following:
+     * {@code URI = scheme:[//authority]path[?query][#fragment]}
      */
     private static String getServicePath(URI uri) {
         final StringBuilder builder = new StringBuilder()
@@ -223,23 +229,47 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
      * @param httpVerb a {@link Verb} to match with {@link HttpMethod}
      * @return {@link HttpMethod} corresponding to the parameter
      */
+
+    private static boolean[] caseCoverage = new boolean[8];
+    private static final String[] methods = { "GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "TRACE", "PATCH" };
+
+    private static void printCoverage() {
+        System.out.println("Coverage report:");
+        for (int i = 0; i < caseCoverage.length; i++) {
+            System.out.println("Branch " + i + ": " + methods[i] + " case executed: " + caseCoverage[i]);
+        }
+    }
+
+    static {
+        // Ensure the coverage report is printed when the class is loaded
+        Runtime.getRuntime().addShutdownHook(new Thread(ArmeriaHttpClient::printCoverage));
+    }
+
     private static HttpMethod getHttpMethod(Verb httpVerb) {
         switch (httpVerb) {
             case GET:
+                caseCoverage[0] = true;
                 return HttpMethod.GET;
             case POST:
+                caseCoverage[1] = true;
                 return HttpMethod.POST;
             case PUT:
+                caseCoverage[2] = true;
                 return HttpMethod.PUT;
             case DELETE:
+                caseCoverage[3] = true;
                 return HttpMethod.DELETE;
             case HEAD:
+                caseCoverage[4] = true;
                 return HttpMethod.HEAD;
             case OPTIONS:
+                caseCoverage[5] = true;
                 return HttpMethod.OPTIONS;
             case TRACE:
+                caseCoverage[6] = true;
                 return HttpMethod.TRACE;
             case PATCH:
+                caseCoverage[7] = true;
                 return HttpMethod.PATCH;
             default:
                 throw new IllegalArgumentException(
@@ -251,7 +281,8 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
     /**
      * Converts {@link AggregatedHttpResponse} to {@link Response}
      *
-     * @param aggregatedResponse an instance of {@link AggregatedHttpResponse} to convert to {@link Response}
+     * @param aggregatedResponse an instance of {@link AggregatedHttpResponse} to
+     *                           convert to {@link Response}
      * @return a {@link Response} converted from {@link AggregatedHttpResponse}
      */
     private Response convertResponse(AggregatedHttpResponse aggregatedResponse) {
@@ -265,14 +296,19 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
     }
 
     /**
-     * Converts {@link AggregatedHttpResponse} to {@link Response} upon its aggregation completion and invokes
+     * Converts {@link AggregatedHttpResponse} to {@link Response} upon its
+     * aggregation completion and invokes
      * {@link OAuthAsyncRequestCallback} for it.
      *
-     * @param callback a {@link OAuthAsyncRequestCallback} callback to invoke upon response completion
-     * @param converter an optional {@link OAuthRequest.ResponseConverter} result converter for {@link Response}
+     * @param callback           a {@link OAuthAsyncRequestCallback} callback to
+     *                           invoke upon response completion
+     * @param converter          an optional {@link OAuthRequest.ResponseConverter}
+     *                           result converter for {@link Response}
      * @param aggregatedResponse a source {@link AggregatedHttpResponse} to handle
-     * @param <T> converter {@link OAuthRequest.ResponseConverter} specific type or {@link Response}
-     * @return either instance of {@link Response} or converted result based on {@link OAuthRequest.ResponseConverter}
+     * @param <T>                converter {@link OAuthRequest.ResponseConverter}
+     *                           specific type or {@link Response}
+     * @return either instance of {@link Response} or converted result based on
+     *         {@link OAuthRequest.ResponseConverter}
      */
     private <T> T whenResponseComplete(OAuthAsyncRequestCallback<T> callback,
             OAuthRequest.ResponseConverter<T> converter, AggregatedHttpResponse aggregatedResponse) {
@@ -292,9 +328,11 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
     /**
      * Invokes {@link OAuthAsyncRequestCallback} upon {@link Throwable} error result
      *
-     * @param callback a {@link OAuthAsyncRequestCallback} callback to invoke upon response completion
+     * @param callback  a {@link OAuthAsyncRequestCallback} callback to invoke upon
+     *                  response completion
      * @param throwable a {@link Throwable} error result
-     * @param <T> converter {@link OAuthRequest.ResponseConverter} specific type or {@link Response}
+     * @param <T>       converter {@link OAuthRequest.ResponseConverter} specific
+     *                  type or {@link Response}
      * @return null
      */
     private <T> T completeExceptionally(OAuthAsyncRequestCallback<T> callback, Throwable throwable) {
