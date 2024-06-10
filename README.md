@@ -25,6 +25,9 @@ Function 2: com.github.scribejava.httpclient.apache.OAuthAsyncCompletionHandler.
 ![Set a flag if the branch is reached](image-5.png)
 ![Coverage results output](image-6.png)
 
+![Before adding coverage](image.png)
+![After adding coverage](image-1.png)
+
 Jayran Duggins
 Function 1: scribejava-httpclient-armeria/src/main/java/com/github/scribejava/httpclient/armeria/ArmeriaHttpClient.java (getHttpMethod)
 
