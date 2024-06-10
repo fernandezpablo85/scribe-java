@@ -57,6 +57,12 @@ Function 2: SEP-Assingment1/scribejava-httpclient-armeria/src/main/java/com/gith
 
 
 
+![image](https://github.com/YBushi/SEP-Assingment1/assets/113595455/9f7c108a-fc45-4466-bbae-f72f10861526)
+
+
+
+
+
 
 
 
