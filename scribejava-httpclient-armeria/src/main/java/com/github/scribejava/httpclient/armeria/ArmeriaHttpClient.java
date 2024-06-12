@@ -202,8 +202,7 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
         return requireNonNull(uri.getScheme(), "scheme") + "://" + requireNonNull(uri.getAuthority(), "authority");
     }
 
-    // private static boolean[] getServiceCaseCoverage = new boolean[2]; // Data
-    // structure
+    private static boolean[] getServiceCaseCoverage = new boolean[2]; // Data structure
 
     /**
      * Extracts {@code path}, {@code query} and {@code fragment} portion of the
@@ -217,38 +216,34 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
                 .append(requireNonNull(uri.getPath(), "path"));
         final String query = uri.getQuery();
         if (query != null) {
-            // getServiceCaseCoverage[0] = true; // ID:
-            // ArmeriaHttpClient.getServicePath.branch_1
+            getServiceCaseCoverage[0] = true; // ID: ArmeriaHttpClient.getServicePath.branch_1
             builder.append('?').append(query);
         }
         final String fragment = uri.getFragment();
         if (fragment != null) {
-            // getServiceCaseCoverage[1] = true; // ID:
-            // ArmeriaHttpClient.getServicePath.branch_2
+            getServiceCaseCoverage[1] = true; // ID: ArmeriaHttpClient.getServicePath.branch_2
             builder.append('#').append(fragment);
         }
         return builder.toString();
     }
 
-    // private static void printCoverage() {
-    // System.out.println("GetHttpMethod Coverage report:");
-    // for (int i = 0; i < getHttpCaseCoverage.length; i++) {
-    // System.out.println("ArmeriaHttpClient.getHttpMethod.branch_" + (i + 1) + ": "
-    // + getHttpCaseCoverage[i]);
-    // }
+    private static void printCoverage() {
+        System.out.println("GetHttpMethod Coverage report:");
+        for (int i = 0; i < getHttpCaseCoverage.length; i++) {
+            System.out.println("ArmeriaHttpClient.getHttpMethod.branch_" + (i + 1) + ": "
+                    + getHttpCaseCoverage[i]);
+        }
 
-    // System.out.println("GetService Coverage report:");
-    // for (int i = 0; i < getServiceCaseCoverage.length; i++) {
-    // System.out.println("ArmeriaHttpClient.getServicePath.branch_" + (i + 1) + ":
-    // " + getServiceCaseCoverage[i]);
-    // }
-    // }
+        System.out.println("GetService Coverage report:");
+        for (int i = 0; i < getServiceCaseCoverage.length; i++) {
+            System.out.println("ArmeriaHttpClient.getServicePath.branch_" + (i + 1) + ":" + getServiceCaseCoverage[i]);
+        }
+    }
 
-    // static {
-    // // Ensure the coverage report is printed when the class is loaded
-    // Runtime.getRuntime().addShutdownHook(new
-    // Thread(ArmeriaHttpClient::printCoverage));
-    // }
+    static {
+        // Ensure the coverage report is printed when the class is loaded
+        Runtime.getRuntime().addShutdownHook(new Thread(ArmeriaHttpClient::printCoverage));
+    }
 
     /**
      * Maps {@link Verb} to {@link HttpMethod}
@@ -263,39 +258,39 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
         switch (httpVerb) {
             case GET:
                 // ID: ArmeriaHttpClient.getHttpMethod.branch_1
-                // getHttpCaseCoverage[0] = true;
+                getHttpCaseCoverage[0] = true;
                 return HttpMethod.GET;
             case POST:
                 // ID: ArmeriaHttpClient.getHttpMethod.branch_2
-                // getHttpCaseCoverage[1] = true;
+                getHttpCaseCoverage[1] = true;
                 return HttpMethod.POST;
             case PUT:
                 // ID: ArmeriaHttpClient.getHttpMethod.branch_3
-                // getHttpCaseCoverage[2] = true;
+                getHttpCaseCoverage[2] = true;
                 return HttpMethod.PUT;
             case DELETE:
                 // ID: ArmeriaHttpClient.getHttpMethod.branch_4
-                // getHttpCaseCoverage[3] = true;
+                getHttpCaseCoverage[3] = true;
                 return HttpMethod.DELETE;
             case HEAD:
                 // ID: ArmeriaHttpClient.getHttpMethod.branch_5
-                // getHttpCaseCoverage[4] = true;
+                getHttpCaseCoverage[4] = true;
                 return HttpMethod.HEAD;
             case OPTIONS:
                 // ID: ArmeriaHttpClient.getHttpMethod.branch_6
-                // getHttpCaseCoverage[5] = true;
+                getHttpCaseCoverage[5] = true;
                 return HttpMethod.OPTIONS;
             case TRACE:
                 // ID: ArmeriaHttpClient.getHttpMethod.branch_7
-                // getHttpCaseCoverage[6] = true;
+                getHttpCaseCoverage[6] = true;
                 return HttpMethod.TRACE;
             case PATCH:
                 // ID: ArmeriaHttpClient.getHttpMethod.branch_8
-                // getHttpCaseCoverage[7] = true;
+                getHttpCaseCoverage[7] = true;
                 return HttpMethod.PATCH;
             default:
                 // ID: ArmeriaHttpClient.getHttpMethod.branch_9
-                // getHttpCaseCoverage[8] = true;
+                getHttpCaseCoverage[8] = true;
                 throw new IllegalArgumentException(
                         "message build error: unsupported HTTP method: " + httpVerb.name());
         }
