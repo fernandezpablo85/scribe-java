@@ -54,11 +54,6 @@ public class KeycloakApi extends DefaultApi20 {
     }
 
     @Override
-    public ClientAuthentication getClientAuthentication() {
-        return RequestBodyAuthenticationScheme.instance();
-    }
-
-    @Override
     public TokenExtractor<OAuth2AccessToken> getAccessTokenExtractor() {
         return OpenIdJsonTokenExtractor.instance();
     }
