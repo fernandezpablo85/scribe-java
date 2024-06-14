@@ -38,7 +38,7 @@ public class KeycloakApi extends DefaultApi20 {
     }
 
     protected static String composeBaseUrlWithRealm(String baseUrl, String realm) {
-        return baseUrl + (baseUrl.endsWith("/") ? "" : "/") + "auth/realms/" + realm;
+        return baseUrl + (baseUrl.endsWith("/") ? "" : "/") + "realms/" + realm;
     }
 
     @Override
