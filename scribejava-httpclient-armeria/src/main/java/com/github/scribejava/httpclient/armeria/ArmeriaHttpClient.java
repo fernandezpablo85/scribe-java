@@ -211,7 +211,7 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
      * Assuming the {@link URI} as the following:
      * {@code URI = scheme:[//authority]path[?query][#fragment]}
      */
-    private static String getServicePath(URI uri) {
+    public static String getServicePath(URI uri) {
         final StringBuilder builder = new StringBuilder()
                 .append(requireNonNull(uri.getPath(), "path"));
         final String query = uri.getQuery();
@@ -254,7 +254,7 @@ public class ArmeriaHttpClient extends AbstractAsyncOnlyHttpClient {
 
     private static boolean[] getHttpCaseCoverage = new boolean[9];
 
-    private static HttpMethod getHttpMethod(Verb httpVerb) {
+    public static HttpMethod getHttpMethod(Verb httpVerb) {
         switch (httpVerb) {
             case GET:
                 // ID: ArmeriaHttpClient.getHttpMethod.branch_1
