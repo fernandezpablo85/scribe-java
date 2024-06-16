@@ -13,10 +13,6 @@ import com.linecorp.armeria.common.HttpMethod;
 public class ArmeriaHttpCustomTest {
     @Test
     public void testGetHttpMethod_GET() {
-        System.out.println("gang shit\n");
-        System.out.println("THIS IS THE ." + ArmeriaHttpClient.getHttpMethod(Verb.GET) + ".");
-        System.out.println("THIS IS THE pt 2 ." + HttpMethod.GET + ".");
-
         assertEquals(HttpMethod.GET, ArmeriaHttpClient.getHttpMethod(Verb.GET));
     }
 
