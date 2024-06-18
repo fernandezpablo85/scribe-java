@@ -20,14 +20,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class NingHttpClient extends AbstractAsyncOnlyHttpClient {
 
     private final AsyncHttpClient client;
-    private static final ConcurrentHashMap<String, AtomicBoolean> branchCoverage = new ConcurrentHashMap<>();
-    // data structure for info about the branches 
+    public static final ConcurrentHashMap<String, AtomicBoolean> branchCoverage = new ConcurrentHashMap<>();
+     // Branch coverage data structure Nikola
     static {
-        branchCoverage.put("branch_1", new AtomicBoolean(false)); // GET
-        branchCoverage.put("branch_2", new AtomicBoolean(false)); // POST
-        branchCoverage.put("branch_3", new AtomicBoolean(false)); // PUT
-        branchCoverage.put("branch_4", new AtomicBoolean(false)); // DELETE
-        branchCoverage.put("branch_5", new AtomicBoolean(false)); // DEFAULT
+        branchCoverage.put("NingHttpClientdoExecuteAsync.branch_1", new AtomicBoolean(false)); 
+        branchCoverage.put("NingHttpClientdoExecuteAsync.branch_2", new AtomicBoolean(false)); 
+        branchCoverage.put("NingHttpClientdoExecuteAsync.branch_3", new AtomicBoolean(false)); 
+        branchCoverage.put("NingHttpClientdoExecuteAsync.branch_4", new AtomicBoolean(false)); 
+        branchCoverage.put("NingHttpClientdoExecuteAsync.branch_5", new AtomicBoolean(false)); 
 
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             @Override
@@ -102,41 +102,39 @@ public class NingHttpClient extends AbstractAsyncOnlyHttpClient {
     }
 
     // branch coverage: Nikola
-    private <T> Future<T> doExecuteAsync(String userAgent, Map<String, String> headers, Verb httpVerb,
+    public <T> Future<T> doExecuteAsync(String userAgent, Map<String, String> headers, Verb httpVerb,
         String completeUrl, BodySetter bodySetter, Object bodyContents, OAuthAsyncRequestCallback<T> callback,
         OAuthRequest.ResponseConverter<T> converter) {
     final AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;
     switch (httpVerb) {
         // ID: branch_1
         case GET:
-            branchCoverage.get("branch_1").set(true); // Update branch coverage for GET
+            branchCoverage.get("NingHttpClientdoExecuteAsync.branch_1").set(true); 
             boundRequestBuilder = client.prepareGet(completeUrl);
             break;
         // ID: branch_2
         case POST:
-            branchCoverage.get("branch_2").set(true); // Update branch coverage for POST
+            branchCoverage.get("NingHttpClientdoExecuteAsync.branch_2").set(true);
             boundRequestBuilder = client.preparePost(completeUrl);
             break;
         // ID: branch_3
         case PUT:
-            branchCoverage.get("branch_3").set(true); // Update branch coverage for PUT
+            branchCoverage.get("NingHttpClientdoExecuteAsync.branch_3").set(true); 
             boundRequestBuilder = client.preparePut(completeUrl);
             break;
         // ID: branch_4    
         case DELETE:
-            branchCoverage.get("branch_4").set(true); // Update branch coverage for DELETE
+            branchCoverage.get("NingHttpClientdoExecuteAsync.branch_4").set(true); 
             boundRequestBuilder = client.prepareDelete(completeUrl);
             break;
         // ID: branch_5
         default:
-            branchCoverage.get("branch_5").set(true); // Update branch coverage for DEFAULT case
+            branchCoverage.get("NingHttpClientdoExecuteAsync.branch_5").set(true); 
             throw new IllegalArgumentException("message build error: unknown verb type");
     }
 
     if (httpVerb.isPermitBody()) {
-        // Check if the Content-Type header is already present
         if (!headers.containsKey("Content-Type")) {
-            // Set the Content-Type header if not present
             boundRequestBuilder.addHeader("Content-Type", "application/x-www-form-urlencoded");
         }
         bodySetter.setBody(boundRequestBuilder, bodyContents);
@@ -154,7 +152,7 @@ public class NingHttpClient extends AbstractAsyncOnlyHttpClient {
 }
 
 
-    private enum BodySetter {
+    public enum BodySetter {
         BYTE_ARRAY {
             @Override
             AsyncHttpClient.BoundRequestBuilder setBody(AsyncHttpClient.BoundRequestBuilder requestBuilder,
