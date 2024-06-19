@@ -15,11 +15,13 @@ import io.netty.resolver.AddressResolver;
 import io.netty.resolver.AddressResolverGroup;
 import io.netty.util.concurrent.EventExecutor;
 import io.netty.util.concurrent.Promise;
+
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
+
 import org.slf4j.LoggerFactory;
 
 public class ArmeriaHttpClientTest extends AbstractClientTest {
@@ -27,8 +29,7 @@ public class ArmeriaHttpClientTest extends AbstractClientTest {
     @Override
     protected HttpClient createNewClient() {
         // simulate DNS resolution for a mock address ("kubernetes.docker.internal")
-        final Function<? super EventLoopGroup, ? extends AddressResolverGroup<? extends InetSocketAddress>> addressRGF
-                = eventLoopGroup -> new MockAddressResolverGroup();
+        final Function<? super EventLoopGroup, ? extends AddressResolverGroup<? extends InetSocketAddress>> addressRGF = eventLoopGroup -> new MockAddressResolverGroup();
         // No-Op DNS resolver to avoid resolution issues in the unit test
         final ClientFactory clientFactory = ClientFactory.builder().addressResolverGroupFactory(addressRGF).build();
         final ArmeriaHttpClientConfig config = new ArmeriaHttpClientConfig(null, clientFactory);
