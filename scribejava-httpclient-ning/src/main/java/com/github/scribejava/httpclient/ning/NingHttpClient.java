@@ -28,6 +28,10 @@ public class NingHttpClient extends AbstractAsyncOnlyHttpClient {
         branchCoverage.put("NingHttpClientdoExecuteAsync.branch_3", new AtomicBoolean(false)); 
         branchCoverage.put("NingHttpClientdoExecuteAsync.branch_4", new AtomicBoolean(false)); 
         branchCoverage.put("NingHttpClientdoExecuteAsync.branch_5", new AtomicBoolean(false)); 
+        branchCoverage.put("NingHttpClientdoExecuteAsync.branch_6", new AtomicBoolean(false)); 
+        branchCoverage.put("NingHttpClientdoExecuteAsync.branch_7", new AtomicBoolean(false)); 
+        branchCoverage.put("NingHttpClientdoExecuteAsync.branch_8", new AtomicBoolean(false)); 
+
 
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             @Override
@@ -133,8 +137,12 @@ public class NingHttpClient extends AbstractAsyncOnlyHttpClient {
             throw new IllegalArgumentException("message build error: unknown verb type");
     }
 
+    // ID: branch_6
     if (httpVerb.isPermitBody()) {
+        branchCoverage.get("NingHttpClientdoExecuteAsync.branch_6").set(true); 
+        // ID: branch_7
         if (!headers.containsKey("Content-Type")) {
+            branchCoverage.get("NingHttpClientdoExecuteAsync.branch_7").set(true); 
             boundRequestBuilder.addHeader("Content-Type", "application/x-www-form-urlencoded");
         }
         bodySetter.setBody(boundRequestBuilder, bodyContents);
@@ -144,7 +152,9 @@ public class NingHttpClient extends AbstractAsyncOnlyHttpClient {
         boundRequestBuilder.addHeader(header.getKey(), header.getValue());
     }
 
+    // ID: branch_8
     if (userAgent != null) {
+        branchCoverage.get("NingHttpClientdoExecuteAsync.branch_8").set(true); 
         boundRequestBuilder.setHeader(OAuthConstants.USER_AGENT_HEADER_NAME, userAgent);
     }
 
