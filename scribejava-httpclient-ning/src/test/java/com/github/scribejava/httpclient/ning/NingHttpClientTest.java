@@ -29,6 +29,7 @@ public class NingHttpClientTest extends AbstractClientTest {
     }
 
 
+//new tests
 
 
 @Test
