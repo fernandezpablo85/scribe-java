@@ -8,15 +8,41 @@ import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Verb;
 import com.ning.http.client.AsyncHttpClient;
 
+
 import java.util.Map;
 import java.util.concurrent.Future;
 
 import com.ning.http.client.AsyncHttpClientConfig;
 import java.io.File;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class NingHttpClient extends AbstractAsyncOnlyHttpClient {
 
     private final AsyncHttpClient client;
+    public static final ConcurrentHashMap<String, AtomicBoolean> branchCoverage = new ConcurrentHashMap<>();
+     // Branch coverage data structure Nikola
+    static {
+        branchCoverage.put("NingHttpClientdoExecuteAsync.branch_1", new AtomicBoolean(false)); 
+        branchCoverage.put("NingHttpClientdoExecuteAsync.branch_2", new AtomicBoolean(false)); 
+        branchCoverage.put("NingHttpClientdoExecuteAsync.branch_3", new AtomicBoolean(false)); 
+        branchCoverage.put("NingHttpClientdoExecuteAsync.branch_4", new AtomicBoolean(false)); 
+        branchCoverage.put("NingHttpClientdoExecuteAsync.branch_5", new AtomicBoolean(false)); 
+        branchCoverage.put("NingHttpClientdoExecuteAsync.branch_6", new AtomicBoolean(false)); 
+        branchCoverage.put("NingHttpClientdoExecuteAsync.branch_7", new AtomicBoolean(false)); 
+        branchCoverage.put("NingHttpClientdoExecuteAsync.branch_8", new AtomicBoolean(false)); 
+
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Branch coverage results:");
+                for (Map.Entry<String, AtomicBoolean> entry : branchCoverage.entrySet()) {
+                    System.out.println(entry.getKey() + ": " + (entry.getValue().get() ? "Taken" : "Not taken"));
+                }
+            }
+        }));
+    }
 
     public NingHttpClient() {
         this(NingHttpClientConfig.defaultConfig());
@@ -79,46 +105,64 @@ public class NingHttpClient extends AbstractAsyncOnlyHttpClient {
                 converter);
     }
 
-    private <T> Future<T> doExecuteAsync(String userAgent, Map<String, String> headers, Verb httpVerb,
-            String completeUrl, BodySetter bodySetter, Object bodyContents, OAuthAsyncRequestCallback<T> callback,
-            OAuthRequest.ResponseConverter<T> converter) {
-        final AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;
-        switch (httpVerb) {
-            case GET:
-                boundRequestBuilder = client.prepareGet(completeUrl);
-                break;
-            case POST:
-                boundRequestBuilder = client.preparePost(completeUrl);
-                break;
-            case PUT:
-                boundRequestBuilder = client.preparePut(completeUrl);
-                break;
-            case DELETE:
-                boundRequestBuilder = client.prepareDelete(completeUrl);
-                break;
-            default:
-                throw new IllegalArgumentException("message build error: unknown verb type");
-        }
-
-        if (httpVerb.isPermitBody()) {
-            if (!headers.containsKey(CONTENT_TYPE)) {
-                boundRequestBuilder.addHeader(CONTENT_TYPE, DEFAULT_CONTENT_TYPE);
-            }
-            bodySetter.setBody(boundRequestBuilder, bodyContents);
-        }
-
-        for (Map.Entry<String, String> header : headers.entrySet()) {
-            boundRequestBuilder.addHeader(header.getKey(), header.getValue());
-        }
-
-        if (userAgent != null) {
-            boundRequestBuilder.setHeader(OAuthConstants.USER_AGENT_HEADER_NAME, userAgent);
-        }
-
-        return boundRequestBuilder.execute(new OAuthAsyncCompletionHandler<>(callback, converter));
+    // branch coverage: Nikola
+    public <T> Future<T> doExecuteAsync(String userAgent, Map<String, String> headers, Verb httpVerb,
+        String completeUrl, BodySetter bodySetter, Object bodyContents, OAuthAsyncRequestCallback<T> callback,
+        OAuthRequest.ResponseConverter<T> converter) {
+    final AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;
+    switch (httpVerb) {
+        // ID: branch_1
+        case GET:
+            branchCoverage.get("NingHttpClientdoExecuteAsync.branch_1").set(true); 
+            boundRequestBuilder = client.prepareGet(completeUrl);
+            break;
+        // ID: branch_2
+        case POST:
+            branchCoverage.get("NingHttpClientdoExecuteAsync.branch_2").set(true);
+            boundRequestBuilder = client.preparePost(completeUrl);
+            break;
+        // ID: branch_3
+        case PUT:
+            branchCoverage.get("NingHttpClientdoExecuteAsync.branch_3").set(true); 
+            boundRequestBuilder = client.preparePut(completeUrl);
+            break;
+        // ID: branch_4    
+        case DELETE:
+            branchCoverage.get("NingHttpClientdoExecuteAsync.branch_4").set(true); 
+            boundRequestBuilder = client.prepareDelete(completeUrl);
+            break;
+        // ID: branch_5
+        default:
+            branchCoverage.get("NingHttpClientdoExecuteAsync.branch_5").set(true); 
+            throw new IllegalArgumentException("message build error: unknown verb type");
     }
 
-    private enum BodySetter {
+    // ID: branch_6
+    if (httpVerb.isPermitBody()) {
+        branchCoverage.get("NingHttpClientdoExecuteAsync.branch_6").set(true); 
+        // ID: branch_7
+        if (!headers.containsKey("Content-Type")) {
+            branchCoverage.get("NingHttpClientdoExecuteAsync.branch_7").set(true); 
+            boundRequestBuilder.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        }
+        bodySetter.setBody(boundRequestBuilder, bodyContents);
+    }
+
+    for (Map.Entry<String, String> header : headers.entrySet()) {
+        boundRequestBuilder.addHeader(header.getKey(), header.getValue());
+    }
+
+    // ID: branch_8
+    if (userAgent != null) {
+        branchCoverage.get("NingHttpClientdoExecuteAsync.branch_8").set(true); 
+        boundRequestBuilder.setHeader(OAuthConstants.USER_AGENT_HEADER_NAME, userAgent);
+    }
+
+    return boundRequestBuilder.execute(new OAuthAsyncCompletionHandler<>(callback, converter));
+}
+
+
+    public enum BodySetter {
         BYTE_ARRAY {
             @Override
             AsyncHttpClient.BoundRequestBuilder setBody(AsyncHttpClient.BoundRequestBuilder requestBuilder,

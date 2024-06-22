@@ -34,6 +34,7 @@ public class OAuthAsyncCompletionHandler<T> implements FutureCallback<HttpRespon
         this.latch = new CountDownLatch(1);
     }
 
+    //branch coverage Tomas
     @Override
     public void completed(HttpResponse httpResponse) {
         try {

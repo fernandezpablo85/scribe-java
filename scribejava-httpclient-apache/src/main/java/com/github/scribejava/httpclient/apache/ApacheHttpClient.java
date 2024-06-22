@@ -100,7 +100,8 @@ public class ApacheHttpClient extends AbstractAsyncOnlyHttpClient {
         final Future<HttpResponse> future = client.execute(builder.build(), handler);
         return new ApacheHttpFuture<>(future, handler);
     }
-
+    
+    //branch coverage: Tomas
     private static RequestBuilder getRequestBuilder(Verb httpVerb) {
         switch (httpVerb) {
             case GET:

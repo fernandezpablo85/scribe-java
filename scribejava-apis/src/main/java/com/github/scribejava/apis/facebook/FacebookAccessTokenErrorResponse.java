@@ -4,7 +4,9 @@ import com.github.scribejava.core.model.OAuthResponseException;
 import com.github.scribejava.core.model.Response;
 import java.io.IOException;
 import java.util.Objects;
-
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * non standard Facebook replace for {@link com.github.scribejava.core.model.OAuth2AccessTokenErrorResponse}
  *
@@ -24,6 +26,32 @@ public class FacebookAccessTokenErrorResponse extends OAuthResponseException {
     private final String type;
     private final int codeInt;
     private final String fbtraceId;
+
+     // Branch coverage data structure Nikola
+    private static final ConcurrentHashMap<String, AtomicBoolean> branchCoverage = new ConcurrentHashMap<>();
+
+    static {
+        branchCoverage.put("FacebookAccessTokenErrorResponse.equals.branch_1", new AtomicBoolean(false));
+        branchCoverage.put("FacebookAccessTokenErrorResponse.equals.branch_2", new AtomicBoolean(false));
+        branchCoverage.put("FacebookAccessTokenErrorResponse.equals.branch_3", new AtomicBoolean(false));
+        branchCoverage.put("FacebookAccessTokenErrorResponse.equals.branch_4", new AtomicBoolean(false));
+        branchCoverage.put("FacebookAccessTokenErrorResponse.equals.branch_5", new AtomicBoolean(false));
+        branchCoverage.put("FacebookAccessTokenErrorResponse.equals.branch_6", new AtomicBoolean(false));
+        branchCoverage.put("FacebookAccessTokenErrorResponse.equals.branch_7", new AtomicBoolean(false));
+
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (System.out) {
+                    System.out.println("FacebookAccessTokenErrorResponse equals method coverage:");
+                    for (Map.Entry<String, AtomicBoolean> entry : branchCoverage.entrySet()) {
+                        System.out.println(entry.getKey() + ": " + (entry.getValue().get() ? "Taken" : "Not taken"));
+                    }
+                }
+            }
+        }));
+    }
 
     public FacebookAccessTokenErrorResponse(String errorMessage, String type, int code, String fbtraceId,
             Response response)
@@ -61,33 +89,39 @@ public class FacebookAccessTokenErrorResponse extends OAuthResponseException {
         return hash;
     }
 
+    // branch coverage Nikola
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
+            branchCoverage.get("FacebookAccessTokenErrorResponse.equals.branch_1").set(true);
             return true;
         }
         if (obj == null) {
+            branchCoverage.get("FacebookAccessTokenErrorResponse.equals.branch_2").set(true);
             return false;
         }
         if (getClass() != obj.getClass()) {
+            branchCoverage.get("FacebookAccessTokenErrorResponse.equals.branch_3").set(true);
             return false;
         }
-        if (!super.equals(obj)) {
+        FacebookAccessTokenErrorResponse other = (FacebookAccessTokenErrorResponse) obj;
+        if (!Objects.equals(errorMessage, other.errorMessage)) {
+            branchCoverage.get("FacebookAccessTokenErrorResponse.equals.branch_4").set(true);
             return false;
         }
-
-        final FacebookAccessTokenErrorResponse other = (FacebookAccessTokenErrorResponse) obj;
-
-        if (!Objects.equals(errorMessage, other.getErrorMessage())) {
+        if (!Objects.equals(type, other.type)) {
+            branchCoverage.get("FacebookAccessTokenErrorResponse.equals.branch_5").set(true);
             return false;
         }
-        if (!Objects.equals(type, other.getType())) {
+        if (codeInt != other.codeInt) {
+            branchCoverage.get("FacebookAccessTokenErrorResponse.equals.branch_6").set(true);
             return false;
         }
-        if (codeInt != other.getCodeInt()) {
+        if (!Objects.equals(fbtraceId, other.fbtraceId)) {
+            branchCoverage.get("FacebookAccessTokenErrorResponse.equals.branch_7").set(true);
             return false;
         }
-        return Objects.equals(fbtraceId, other.getFbtraceId());
+        return true;
     }
 
     @Override
