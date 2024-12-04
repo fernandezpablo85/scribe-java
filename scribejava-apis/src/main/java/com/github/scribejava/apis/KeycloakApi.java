@@ -23,8 +23,10 @@ public class KeycloakApi extends DefaultApi20 {
     }
 
     public static KeycloakApi instance(String baseUrl, String realm) {
-        final String defaultBaseUrlWithRealm = composeBaseUrlWithRealm(baseUrl, realm);
+        return instance(composeBaseUrlWithRealm(baseUrl, realm));
+    }
 
+    public static KeycloakApi instance(String defaultBaseUrlWithRealm) {
         //java8: switch to ConcurrentMap::computeIfAbsent
         KeycloakApi api = INSTANCES.get(defaultBaseUrlWithRealm);
         if (api == null) {
@@ -38,7 +40,7 @@ public class KeycloakApi extends DefaultApi20 {
     }
 
     protected static String composeBaseUrlWithRealm(String baseUrl, String realm) {
-        return baseUrl + (baseUrl.endsWith("/") ? "" : "/") + "auth/realms/" + realm;
+        return baseUrl + (baseUrl.endsWith("/") ? "" : "/") + "realms/" + realm;
     }
 
     @Override
